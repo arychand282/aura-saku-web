@@ -15,6 +15,7 @@ export interface TransactionRow {
   exchange_rate: number;
   converted_amount: number;
   source: string;
+  raw_input: string;
 }
 
 export interface TransactionsListResponse {

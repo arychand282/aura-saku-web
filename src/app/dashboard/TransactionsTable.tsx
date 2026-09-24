@@ -18,6 +18,7 @@ export default function TransactionsTable({ transactions }: { transactions: Tran
             <th className="px-4 py-2">Type</th>
             <th className="px-4 py-2">Category</th>
             <th className="px-4 py-2">Description</th>
+            <th className="px-4 py-2">Original Chat</th>
             <th className="px-4 py-2 text-right">Amount</th>
           </tr>
         </thead>
@@ -28,6 +29,12 @@ export default function TransactionsTable({ transactions }: { transactions: Tran
               <td className="px-4 py-2 capitalize text-gray-600">{t.type}</td>
               <td className="px-4 py-2 text-gray-600">{t.category_name || "—"}</td>
               <td className="px-4 py-2 text-gray-600">{t.description}</td>
+              <td
+                title={t.raw_input}
+                className="max-w-[220px] truncate px-4 py-2 text-gray-500 italic"
+              >
+                {t.raw_input || "—"}
+              </td>
               <td
                 className={`px-4 py-2 text-right font-medium ${
                   t.type === "expense" ? "text-red-600" : "text-green-600"
