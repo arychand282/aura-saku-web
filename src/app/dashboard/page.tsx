@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 
-import { backendGet } from "@/lib/backend";
+import { backendGet, BackendError } from "@/lib/backend";
 import { auth } from "@/lib/auth";
 import type {
   BudgetProgressResponse,
@@ -56,12 +56,30 @@ export default async function DashboardPage({
     ...(viewUserId ? { user_id: viewUserId } : {}),
   });
 
-  const [summary, topCategories, budgetProgress, transactions] = await Promise.all([
-    backendGet<SummaryResponse>(`/api/v1/reports/summary?${qs}`),
-    backendGet<TopCategoriesResponse>(`/api/v1/reports/top-categories?${qs}`),
-    backendGet<BudgetProgressResponse>(`/api/v1/reports/budget-progress${budgetQs}`),
-    backendGet<TransactionsListResponse>(`/api/v1/transactions?${txQs}`),
-  ]);
+  let summary: SummaryResponse;
+  let topCategories: TopCategoriesResponse;
+  let budgetProgress: BudgetProgressResponse;
+  let transactions: TransactionsListResponse;
+  try {
+    [summary, topCategories, budgetProgress, transactions] = await Promise.all([
+      backendGet<SummaryResponse>(`/api/v1/reports/summary?${qs}`),
+      backendGet<TopCategoriesResponse>(`/api/v1/reports/top-categories?${qs}`),
+      backendGet<BudgetProgressResponse>(`/api/v1/reports/budget-progress${budgetQs}`),
+      backendGet<TransactionsListResponse>(`/api/v1/transactions?${txQs}`),
+    ]);
+  } catch (err) {
+    if (elevated && err instanceof BackendError && err.status === 404) {
+      return (
+        <div className="rounded border border-dashed border-gray-300 bg-white p-8 text-center text-gray-600">
+          <p className="mb-4">No user found with ID {viewUserId}.</p>
+          <div className="flex justify-center">
+            <ViewAsUserControl mode="prompt" />
+          </div>
+        </div>
+      );
+    }
+    throw err;
+  }
 
   return (
     <div className="space-y-6">
