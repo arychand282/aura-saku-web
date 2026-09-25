@@ -1,5 +1,7 @@
 import type { TransactionRow } from "@/lib/types";
 
+import OriginalChatCell from "./OriginalChatCell";
+
 export default function TransactionsTable({ transactions }: { transactions: TransactionRow[] | null }) {
   if (!transactions || transactions.length === 0) {
     return (
@@ -29,12 +31,7 @@ export default function TransactionsTable({ transactions }: { transactions: Tran
               <td className="px-4 py-2 capitalize text-gray-600">{t.type}</td>
               <td className="px-4 py-2 text-gray-600">{t.category_name || "—"}</td>
               <td className="px-4 py-2 text-gray-600">{t.description}</td>
-              <td
-                title={t.raw_input}
-                className="max-w-[220px] truncate px-4 py-2 text-gray-500 italic"
-              >
-                {t.raw_input || "—"}
-              </td>
+              <OriginalChatCell text={t.raw_input} />
               <td
                 className={`px-4 py-2 text-right font-medium ${
                   t.type === "expense" ? "text-red-600" : "text-green-600"
