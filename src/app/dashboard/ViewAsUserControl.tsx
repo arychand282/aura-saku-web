@@ -26,8 +26,8 @@ export default function ViewAsUserControl({
   }
 
   return (
-    <form onSubmit={submit} className="flex items-center gap-2">
-      <label htmlFor="view-as-user" className="text-sm text-gray-600">
+    <form onSubmit={submit} className="flex flex-wrap items-center gap-2">
+      <label htmlFor="view-as-user" className="text-sm font-medium text-gray-500">
         Viewing user
       </label>
       <input
@@ -37,9 +37,12 @@ export default function ViewAsUserControl({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="user ID"
-        className="w-28 rounded border border-gray-300 px-2 py-1 text-sm"
+        className="w-28 rounded-full border border-gray-200 bg-white px-3.5 py-1.5 text-sm shadow-sm outline-none focus:ring-2 focus:ring-blue-300"
       />
-      <button type="submit" className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700">
+      <button
+        type="submit"
+        className="cursor-pointer rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 px-4 py-1.5 text-sm font-semibold text-white shadow-md shadow-cyan-200 transition hover:brightness-105"
+      >
         {mode === "prompt" ? "View" : "Switch"}
       </button>
     </form>

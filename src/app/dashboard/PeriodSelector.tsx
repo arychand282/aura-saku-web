@@ -4,6 +4,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import type { Period } from "@/lib/types";
 
+import Dropdown from "./Dropdown";
+
 const PERIODS: Period[] = ["daily", "weekly", "monthly", "yearly"];
 
 export default function PeriodSelector({ current }: { current: Period }) {
@@ -11,23 +13,18 @@ export default function PeriodSelector({ current }: { current: Period }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
+  function handleChange(next: string) {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("period", e.target.value);
+    params.set("period", next);
     router.replace(`${pathname}?${params.toString()}`);
   }
 
   return (
-    <select
+    <Dropdown
       value={current}
       onChange={handleChange}
-      className="rounded border border-gray-300 px-3 py-1.5 text-sm capitalize"
-    >
-      {PERIODS.map((p) => (
-        <option key={p} value={p}>
-          {p}
-        </option>
-      ))}
-    </select>
+      options={PERIODS.map((p) => ({ value: p, label: p[0].toUpperCase() + p.slice(1) }))}
+      triggerClassName="rounded-full border border-blue-200 bg-white px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm outline-none transition focus:ring-2 focus:ring-blue-300"
+    />
   );
 }

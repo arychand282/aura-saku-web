@@ -1,7 +1,8 @@
 import { cookies } from "next/headers";
 
-import { backendGet, BackendError } from "@/lib/backend";
 import { auth } from "@/lib/auth";
+import { backendGet, BackendError } from "@/lib/backend";
+import { DEFAULT_PAGE_SIZE, PAGE_SIZE_OPTIONS } from "@/lib/pagination";
 import type {
   BudgetProgressResponse,
   Period,
@@ -20,18 +21,17 @@ import TopCategoriesBarList from "./TopCategoriesBarList";
 import TransactionsTable from "./TransactionsTable";
 import ViewAsUserControl from "./ViewAsUserControl";
 
-const PAGE_LIMIT = 20;
-
 const isElevatedRole = (role: Role) => role === "admin" || role === "superadmin";
 
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ period?: string; page?: string; user_id?: string }>;
+  searchParams: Promise<{ period?: string; page?: string; user_id?: string; limit?: string }>;
 }) {
-  const { period: periodParam, page: pageParam, user_id: viewUserId } = await searchParams;
+  const { period: periodParam, page: pageParam, user_id: viewUserId, limit: limitParam } = await searchParams;
   const period = (periodParam ?? "monthly") as Period;
   const page = Number(pageParam ?? "1") || 1;
+  const pageLimit = PAGE_SIZE_OPTIONS.includes(Number(limitParam)) ? Number(limitParam) : DEFAULT_PAGE_SIZE;
 
   const store = await cookies();
   const role = (store.get(auth.roleCookieName)?.value ?? "user") as Role;
@@ -39,7 +39,7 @@ export default async function DashboardPage({
 
   if (elevated && !viewUserId) {
     return (
-      <div className="rounded border border-dashed border-gray-300 bg-white p-8 text-center text-gray-600">
+      <div className="rounded-3xl border border-dashed border-blue-200 bg-white/70 p-8 text-center text-gray-600 backdrop-blur">
         <p className="mb-4">Enter a user ID to view their dashboard.</p>
         <div className="flex justify-center">
           <ViewAsUserControl mode="prompt" />
@@ -52,7 +52,7 @@ export default async function DashboardPage({
   const budgetQs = viewUserId ? `?user_id=${viewUserId}` : "";
   const txQs = new URLSearchParams({
     page: String(page),
-    limit: String(PAGE_LIMIT),
+    limit: String(pageLimit),
     ...(viewUserId ? { user_id: viewUserId } : {}),
   });
 
@@ -70,7 +70,7 @@ export default async function DashboardPage({
   } catch (err) {
     if (elevated && err instanceof BackendError && err.status === 404) {
       return (
-        <div className="rounded border border-dashed border-gray-300 bg-white p-8 text-center text-gray-600">
+        <div className="rounded-3xl border border-dashed border-blue-200 bg-white/70 p-8 text-center text-gray-600 backdrop-blur">
           <p className="mb-4">No user found with ID {viewUserId}.</p>
           <div className="flex justify-center">
             <ViewAsUserControl mode="prompt" />
@@ -83,8 +83,8 @@ export default async function DashboardPage({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <PeriodSelector current={period} />
           {elevated && <ViewAsUserControl mode="inline" currentUserId={viewUserId} />}
         </div>

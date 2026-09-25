@@ -24,7 +24,7 @@ export default function OriginalChatCell({ text }: { text: string }) {
   }, [text, expanded]);
 
   if (!text) {
-    return <td className="px-4 py-2 text-gray-500 italic">—</td>;
+    return <td className="px-4 py-3 text-gray-400 italic">—</td>;
   }
 
   const clickable = truncated || expanded;
@@ -34,7 +34,7 @@ export default function OriginalChatCell({ text }: { text: string }) {
       ref={cellRef}
       onClick={clickable ? () => setExpanded((prev) => !prev) : undefined}
       title={clickable && !expanded ? text : undefined}
-      className={`px-4 py-2 text-gray-500 italic ${clickable ? "cursor-pointer" : ""} ${
+      className={`px-4 py-3 italic ${clickable ? "cursor-pointer text-gray-500 hover:text-blue-600" : "text-gray-400"} ${
         expanded ? "whitespace-normal break-words" : "max-w-[220px] truncate"
       }`}
     >

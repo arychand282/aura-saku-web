@@ -12,7 +12,7 @@ export default function LoginForm() {
   return (
     <form action={formAction} className="space-y-4">
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="email" className="block text-sm font-semibold text-gray-700">
           Email
         </label>
         <input
@@ -21,11 +21,11 @@ export default function LoginForm() {
           type="email"
           required
           autoComplete="email"
-          className="mt-1 w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="mt-1.5 w-full rounded-xl border border-gray-200 bg-white/70 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-200"
         />
       </div>
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="password" className="block text-sm font-semibold text-gray-700">
           Password
         </label>
         <input
@@ -34,14 +34,16 @@ export default function LoginForm() {
           type="password"
           required
           autoComplete="current-password"
-          className="mt-1 w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="mt-1.5 w-full rounded-xl border border-gray-200 bg-white/70 px-3.5 py-2.5 text-sm text-gray-900 shadow-sm outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-200"
         />
       </div>
-      {state.error && <p className="text-sm text-red-600">{state.error}</p>}
+      {state.error && (
+        <p className="rounded-xl bg-rose-50 px-3 py-2 text-sm font-medium text-rose-600">{state.error}</p>
+      )}
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+        className="w-full rounded-full bg-gradient-to-r from-blue-600 via-cyan-500 to-amber-500 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-cyan-300/40 transition hover:brightness-105 hover:shadow-cyan-300/60 disabled:opacity-50"
       >
         {pending ? "Signing in..." : "Sign in"}
       </button>
